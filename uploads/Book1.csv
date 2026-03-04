@@ -1,0 +1,8 @@
+"site_id,site_name,site_type,materials,total_weight_kg,contamination_pct"
+"A,Site_North,Residential,PET|HDPE|Glass|Paper|Cardboard,450,5"
+"B,Site_South,Industrial,PET|PVC|Metal|Glass|Plastic_Film,620,14"
+"C,Site_East,Commercial,PET|Glass|Aluminum|Paper|Tetrapak,380,8"
+"D,Site_West,Residential,HDPE|Glass|Paper|Organic|Textile,300,6"
+"E,Site_Central,Industrial,PET|Glass|Metal|E_Waste|Battery,540,18"
+"F,Site_Northeast,Commercial,PET|HDPE|Glass|Plastic_Film|Foil,410,9"
+"G,Site_Southwest,Residential,Paper|Cardboard|Organic|Textile|Glass,290,4"

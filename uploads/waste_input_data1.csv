@@ -1,0 +1,6 @@
+site_id,site_name,site_type,materials,total_weight_kg,contamination_pct
+A,Site_A,Urban Residential,plastic_bottles|cardboard|glass|aluminum_cans|paper|food_waste|electronics|plastic_bags|textiles,650,15
+B,Site_B,Commercial District,plastic_bottles|cardboard|glass|aluminum_cans|paper|electronics|plastic_bags|metal_scrap|styrofoam,780,22
+C,Site_C,Industrial Zone,plastic_bottles|cardboard|metal_scrap|electronics|plastic_bags|batteries|paint_cans|ceramics,300,18
+D,Site_D,Suburban Area,plastic_bottles|cardboard|glass|aluminum_cans|paper|food_waste|textiles|plastic_bags|light_bulbs,100,12
+E,Site_E,Recycling Center,plastic_bottles|cardboard|glass|aluminum_cans|paper|metal_scrap|electronics|batteries|textiles,50,8

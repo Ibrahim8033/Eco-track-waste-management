@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">
+            <i class="fas fa-recycle text-success"></i> Waste-Not Circular Economy Tracker
+        </h1>
+        <p class="lead text-muted">Supporting SDG 12: Responsible Consumption and Production</p>
+        <p class="text-secondary">Optimizing Waste Management Through Data Analytics</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-primary mb-4">
+                        <i class="fas fa-upload"></i> Upload Your Data
+                    </h3>
+                    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                        <div class="upload-area mb-3">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <h4>Drop your CSV file here</h4>
+                            <p class="text-muted">or click to browse</p>
+                            <input type="file" name="file" id="file" class="form-control" accept=".csv" required>
+                        </div>
+                        <button type="submit" class="btn btn-custom btn-lg w-100">
+                            <i class="fas fa-chart-line"></i> Analyze Waste Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-primary mb-4">
+                        <i class="fas fa-info-circle"></i> CSV Format Requirements
+                    </h3>
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-columns"></i> Required Columns:</h6>
+                        <ul class="mb-0">
+                            <li><code>site_id</code> - Single letter identifier (A, B, C...)</li>
+                            <li><code>site_name</code> - Display name (Site_A, Site_B...)</li>
+                            <li><code>site_type</code> - Zone description</li>
+                            <li><code>materials</code> - Pipe-separated list (mat1|mat2|mat3)</li>
+                            <li><code>total_weight_kg</code> - Numeric weight</li>
+                            <li><code>contamination_pct</code> - Numeric percentage (0-100)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <h6><i class="fas fa-cogs"></i> Features:</h6>
+                        <ul>
+                            <li>Contaminant detection using set operations</li>
+                            <li>Greedy algorithm for truck loading optimization</li>
+                            <li>Venn diagram visualization</li>
+                            <li>Material overlap analysis</li>
+                            <li>Downloadable reports</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-primary mb-4">
+                        <i class="fas fa-leaf"></i> Environmental Impact
+                    </h3>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-recycle fa-2x mb-2"></i>
+                                <h5>Reduced Contamination</h5>
+                                <p>Data-driven waste segregation</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-truck fa-2x mb-2"></i>
+                                <h5>Optimized Logistics</h5>
+                                <p>Lower carbon emissions</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-chart-pie fa-2x mb-2"></i>
+                                <h5>Material Recovery</h5>
+                                <p>Enhanced recycling rates</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-globe fa-2x mb-2"></i>
+                                <h5>Circular Economy</h5>
+                                <p>Sustainable waste management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

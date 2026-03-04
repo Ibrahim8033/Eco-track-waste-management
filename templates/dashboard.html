@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="display-5 fw-bold"
+                style="background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                <i class="fas fa-chart-line" style="-webkit-text-fill-color: initial; color: var(--primary);"></i>
+                Analysis Dashboard
+            </h1>
+            <p class="text-secondary mb-0">File: <strong class="text-primary">{{ filename }}</strong></p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="/" class="btn btn-outline-custom"><i class="fas fa-arrow-left me-1"></i> New Analysis</a>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box mx-auto mb-3"
+                        style="background: rgba(13,148,136,0.12); width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-map-marker-alt fa-lg" style="color: var(--primary);"></i>
+                    </div>
+                    <div class="stat-value">{{ total_sites }}</div>
+                    <h6 class="text-secondary mt-1">Collection Sites</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box mx-auto mb-3"
+                        style="background: rgba(6,182,212,0.12); width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-weight-hanging fa-lg" style="color: var(--accent);"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(total_weight) }} kg</div>
+                    <h6 class="text-secondary mt-1">Total Weight</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box mx-auto mb-3"
+                        style="background: rgba(245,158,11,0.12); width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-exclamation-triangle fa-lg" style="color: var(--warning);"></i>
+                    </div>
+                    <div class="stat-value"
+                        style="background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        {{ "%.1f"|format(avg_contamination) }}%</div>
+                    <h6 class="text-secondary mt-1">Avg Contamination</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100">
+                <div class="card-body text-center">
+                    <div class="icon-box mx-auto mb-3"
+                        style="background: rgba(99,102,241,0.12); width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-layer-group fa-lg" style="color: #a5b4fc;"></i>
+                    </div>
+                    <div class="stat-value"
+                        style="background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        {{ total_materials }}</div>
+                    <h6 class="text-secondary mt-1">Unique Materials</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sites Overview -->
+    <div class="card border-0 mb-5">
+        <div class="card-body">
+            <div class="section-header">
+                <div class="icon-box" style="background: rgba(13,148,136,0.15);">
+                    <i class="fas fa-building" style="color: var(--primary);"></i>
+                </div>
+                <h3 class="text-primary">Site Overview</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Site</th>
+                            <th>Type</th>
+                            <th>Weight (kg)</th>
+                            <th>Contamination</th>
+                            <th>Materials</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for site_name, site in sites.items() %}
+                        <tr>
+                            <td class="fw-semibold">{{ site_name }}</td>
+                            <td><span class="text-secondary">{{ site['site_type'] }}</span></td>
+                            <td>
+                                <span class="fw-semibold">{{ "%.1f"|format(site['total_weight_kg']) }}</span>
+                            </td>
+                            <td>
+                                {% set pct = site['contamination_pct'] %}
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1"
+                                        style="height: 8px; background: #e2e8f0; border-radius: 4px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            style="width: {{ pct }}%; border-radius: 4px;
+                                             background: {% if pct < 30 %}var(--success){% elif pct < 60 %}var(--warning){% else %}var(--danger){% endif %};"
+                                            aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    <span class="fw-semibold"
+                                        style="min-width: 45px; color: {% if pct < 30 %}var(--success){% elif pct < 60 %}var(--warning){% else %}var(--danger){% endif %};">{{
+                                        "%.1f"|format(pct) }}%</span>
+                                </div>
+                            </td>
+                            <td>
+                                {% for material in site['material_list'] %}
+                                <span class="badge-material">{{ material }}</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Common Contaminants -->
+        <div class="col-lg-6">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <div class="section-header">
+                        <div class="icon-box" style="background: rgba(239,68,68,0.15);">
+                            <i class="fas fa-biohazard" style="color: #f87171;"></i>
+                        </div>
+                        <h3 style="color: #f87171;">Common Contaminants</h3>
+                    </div>
+                    <p class="text-secondary mb-3">Materials found in &gt;80% of collection sites</p>
+                    {% if common_contaminants %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for contaminant in common_contaminants %}
+                        <span class="badge-contaminant" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                            <i class="fas fa-exclamation-circle me-1"></i>{{ contaminant }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>No common contaminants detected across sites.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Venn Diagram -->
+        <div class="col-lg-6">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <div class="section-header">
+                        <div class="icon-box" style="background: rgba(99,102,241,0.15);">
+                            <i class="fas fa-project-diagram" style="color: #a5b4fc;"></i>
+                        </div>
+                        <h3 style="color: #a5b4fc;">Material Overlap</h3>
+                    </div>
+                    {% if plot_base64 %}
+                    <div class="text-center">
+                        <img src="data:image/png;base64,{{ plot_base64 }}" alt="Venn Diagram" class="img-fluid"
+                            style="max-height: 350px; border-radius: 12px; background: rgba(255,255,255,0.03); padding: 0.5rem;">
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Visualization not available (requires 3+ sites with
+                        different zone types).
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unique Materials -->
+    <div class="card border-0 mb-5">
+        <div class="card-body">
+            <div class="section-header">
+                <div class="icon-box" style="background: rgba(99,102,241,0.15);">
+                    <i class="fas fa-fingerprint" style="color: #a5b4fc;"></i>
+                </div>
+                <h3 style="color: #a5b4fc;">Unique Materials Per Site Pair</h3>
+            </div>
+            <p class="text-secondary mb-3">Materials exclusive to one site when compared with another</p>
+            {% if unique_materials %}
+            <div class="row g-3">
+                {% for comparison, materials in unique_materials.items() %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-2" style="color: var(--primary);">{{ comparison }}</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% if materials %}
+                            {% for m in materials %}
+                            <span class="badge-unique">{{ m }}</span>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-secondary fst-italic">No unique materials</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>No unique material comparisons available.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Truck Loading -->
+    <div class="card border-0 mb-5">
+        <div class="card-body">
+            <div class="section-header">
+                <div class="icon-box" style="background: rgba(245,158,11,0.15);">
+                    <i class="fas fa-truck-loading" style="color: var(--warning);"></i>
+                </div>
+                <h3 style="color: var(--warning);">Truck Loading Optimization</h3>
+            </div>
+            <p class="text-secondary mb-3">Greedy algorithm results for optimal waste collection</p>
+            {% if loaded_batches %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Site</th>
+                            <th>Weight (kg)</th>
+                            <th>Contamination</th>
+                            <th>Efficiency Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in loaded_batches %}
+                        <tr>
+                            <td><span class="fw-bold text-primary">{{ loop.index }}</span></td>
+                            <td class="fw-semibold">{{ batch['batch_id'] }}</td>
+                            <td>{{ "%.1f"|format(batch['weight_kg']) }} kg</td>
+                            <td>
+                                <span
+                                    style="color: {% if batch['contamination_pct'] < 30 %}var(--success){% elif batch['contamination_pct'] < 60 %}var(--warning){% else %}var(--danger){% endif %};">
+                                    {{ "%.1f"|format(batch['contamination_pct']) }}%
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1"
+                                        style="height: 6px; background: #e2e8f0; border-radius: 3px; max-width: 120px;">
+                                        <div class="progress-bar"
+                                            style="width: {{ (batch['priority_value'] / 500 * 100)|int }}%; background: var(--gradient-1); border-radius: 3px;">
+                                        </div>
+                                    </div>
+                                    <span class="text-primary fw-semibold">{{ "%.1f"|format(batch['priority_value'])
+                                        }}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>No loading data available.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Downloads -->
+    <div class="card border-0 mb-4">
+        <div class="card-body">
+            <div class="section-header">
+                <div class="icon-box" style="background: rgba(34,197,94,0.15);">
+                    <i class="fas fa-download" style="color: var(--success);"></i>
+                </div>
+                <h3 style="color: var(--success);">Download Reports</h3>
+            </div>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{{ url_for('download_file', filename='truck_loading_manifest.csv') }}"
+                    class="btn btn-outline-custom">
+                    <i class="fas fa-file-csv me-2"></i>Truck Manifest
+                </a>
+                <a href="{{ url_for('download_file', filename='contaminant_report.txt') }}"
+                    class="btn btn-outline-custom">
+                    <i class="fas fa-file-alt me-2"></i>Contaminant Report
+                </a>
+                <a href="{{ url_for('download_file', filename='waste_materials_venn_diagram.png') }}"
+                    class="btn btn-outline-custom">
+                    <i class="fas fa-image me-2"></i>Venn Diagram
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+CONTAMINANT IDENTIFICATION REPORT
+========================================
+
+Analysis Date: 2026-02-26 21:14:14
+Total Sites Analyzed: 5
+Threshold: >80% of sites (4+ sites)
+
+COMMON CONTAMINANTS:
+--------------------
+• aluminum_cans: found in 4 sites (80.0%)
+• cardboard: found in 5 sites (100.0%)
+• electronics: found in 4 sites (80.0%)
+• glass: found in 4 sites (80.0%)
+• paper: found in 4 sites (80.0%)
+• plastic_bags: found in 4 sites (80.0%)
+• plastic_bottles: found in 5 sites (100.0%)
+
+MATERIALS IN ALL SITES:
+-------------------------
+• cardboard
+• plastic_bottles
+
+RECOMMENDATIONS:
+---------------
+1. Implement targeted education for common contaminants
+2. Set up separate collection bins for problematic materials
+3. Consider site-specific sorting protocols

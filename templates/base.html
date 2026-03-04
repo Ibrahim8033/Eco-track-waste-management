@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste-Not | Circular Economy Tracker</title>
+    <meta name="description"
+        content="Waste-Not Circular Economy Tracker — Optimizing waste management through data analytics, supporting SDG 12.">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-light: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #0891b2;
+            --bg-body: #f0f4f8;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --gradient-1: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+            --gradient-2: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --gradient-3: linear-gradient(135deg, #d97706 0%, #dc2626 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(13, 148, 136, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(8, 145, 178, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(79, 70, 229, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-custom .navbar-brand {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-custom .navbar-brand i {
+            -webkit-text-fill-color: initial;
+            color: var(--primary);
+            margin-right: 6px;
+        }
+
+        .navbar-custom .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
+        /* Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 2.5rem 1.5rem;
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            border-color: rgba(13, 148, 136, 0.3) !important;
+        }
+
+        .card-body {
+            padding: 1.8rem !important;
+        }
+
+        /* Headings */
+        h1,
+        .display-4 {
+            font-weight: 800 !important;
+            letter-spacing: -1px;
+        }
+
+        .text-primary {
+            color: var(--primary) !important;
+        }
+
+        .text-muted,
+        .text-secondary {
+            color: var(--text-secondary) !important;
+        }
+
+        .lead {
+            font-size: 1.15rem;
+            font-weight: 400;
+        }
+
+        /* Buttons */
+        .btn-custom {
+            background: var(--gradient-1);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
+            color: #fff;
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 12px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
+        }
+
+        /* Upload area */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            background: rgba(13, 148, 136, 0.03);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(13, 148, 136, 0.06);
+        }
+
+        .upload-area i {
+            color: var(--primary);
+        }
+
+        .upload-area h4 {
+            color: var(--text-primary);
+            margin-top: 0.5rem;
+        }
+
+        /* Stat cards */
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.8rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            background: rgba(13, 148, 136, 0.04);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card i {
+            color: var(--primary);
+        }
+
+        .stat-card h5 {
+            color: var(--text-primary);
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .stat-card .stat-value,
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Alerts */
+        .alert-info {
+            background: rgba(8, 145, 178, 0.06);
+            border: 1px solid rgba(8, 145, 178, 0.15);
+            color: var(--text-primary);
+            border-radius: 12px;
+        }
+
+        .alert-info code {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background: rgba(22, 163, 74, 0.06);
+            border: 1px solid rgba(22, 163, 74, 0.15);
+            color: var(--text-primary);
+            border-radius: 12px;
+        }
+
+        .alert-danger {
+            background: rgba(220, 38, 38, 0.06);
+            border: 1px solid rgba(220, 38, 38, 0.15);
+            color: var(--text-primary);
+            border-radius: 12px;
+        }
+
+        .alert-warning {
+            background: rgba(217, 119, 6, 0.06);
+            border: 1px solid rgba(217, 119, 6, 0.15);
+            color: var(--text-primary);
+            border-radius: 12px;
+        }
+
+        /* Form controls */
+        .form-control {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+        }
+
+        .form-control:focus {
+            background: #fff;
+            border-color: var(--primary);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+        }
+
+        /* Tables */
+        .table {
+            color: var(--text-primary);
+        }
+
+        .table thead th {
+            background: rgba(13, 148, 136, 0.06);
+            border-color: var(--border-color);
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+
+        .table td {
+            border-color: var(--border-color);
+            padding: 0.9rem 1rem;
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background: rgba(13, 148, 136, 0.03);
+        }
+
+        /* Badge */
+        .badge-material {
+            background: rgba(13, 148, 136, 0.08);
+            color: var(--primary);
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            padding: 0.35rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .badge-contaminant {
+            background: rgba(220, 38, 38, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            padding: 0.35rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .badge-unique {
+            background: rgba(79, 70, 229, 0.08);
+            color: #4f46e5;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            padding: 0.35rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        /* Section headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header .icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .section-header h3 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem 0;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        /* Flash messages */
+        .flash-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .flash-message {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Pulse animation */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(13, 148, 136, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(13, 148, 136, 0.35);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Progress bar background for light theme */
+        .progress {
+            background: #e2e8f0 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1.5rem 1rem;
+            }
+
+            h1,
+            .display-4 {
+                font-size: 1.8rem !important;
+            }
+
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-recycle"></i> Waste-Not
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show flash-message" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><i class="fas fa-leaf me-1"></i> Waste-Not Circular Economy Tracker &mdash; Supporting SDG 12:
+                Responsible Consumption & Production</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
